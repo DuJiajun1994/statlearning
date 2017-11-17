@@ -1,4 +1,5 @@
 from data_utils import load_CIFAR10
+import numpy as np
 
 cifar10_dir = 'cifar-10-batches-py'
 
@@ -26,8 +27,8 @@ class DataProvider(object):
             val_data = self._train_data[:s]
             val_label = self._train_label[:s]
         elif 0 < i < 4:
-            train_data = self._train_data[:(i*s)] + self._train_data[((i+1)*s):]
-            train_label = self._train_label[:(i*s)] + self._train_label[((i+1)*s):]
+            train_data = np.concatenate((self._train_data[:(i*s)], self._train_data[((i+1)*s):]), axis=0)
+            train_label = np.concatenate((self._train_label[:(i*s)], self._train_label[((i+1)*s):]), axis=0)
             val_data = self._train_data[(i*s):((i+1)*s)]
             val_label = self._train_label[(i*s):((i+1)*s)]
         elif i == 4:
