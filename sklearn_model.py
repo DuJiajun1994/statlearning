@@ -1,16 +1,17 @@
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import AdaBoostClassifier
 
 
 def train_model(model_name, data, label, cfg):
     if model_name == 'lr':
-        model = LogisticRegression(C=cfg.l2)
+        model = LogisticRegression(C=cfg.C)
     elif model_name == 'knn':
         model = KNeighborsClassifier(n_neighbors=cfg.n_neighbors)
-    elif model_name == 'random_forest':
-        model = RandomForestClassifier()
+    elif model_name == 'svm':
+    	model = SVC(C=cfg.C)
     elif model_name == 'adaboost':
         model = AdaBoostClassifier(n_estimators=cfg.n_estimators)
     data = np.reshape(data, (data.shape[0], -1))
