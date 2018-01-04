@@ -14,10 +14,13 @@ import pickle
 beginTime = time.time()
 
 # Parameter definitions
+weight_decay = 0.0
 batch_size = 100
 learning_rate = 0.005
 max_steps = 100000
 
+
+print('weight_decay: {}'.format(weight_decay))
 
 def load_data():
   '''load all CIFAR-10 data'''
@@ -53,7 +56,7 @@ images_placeholder = tf.placeholder(tf.float32, shape=[None, 32, 32, 3])
 labels_placeholder = tf.placeholder(tf.int64, shape=[None])
 
 # Define the classifier's result
-with slim.arg_scope(cifarnet_arg_scope()):
+with slim.arg_scope(cifarnet_arg_scope(weight_decay)):
   logits, _ = cifarnet(images_placeholder, is_training=True)
 
 # Define the loss function

@@ -23,10 +23,12 @@ max_steps = 150000
 
 def get_test_data():
   images = []
-  names = os.listdir('testdata')
+  names = os.listdir('testData')
+  names.sort()
   for image_name in names:
-    image_path = os.path.join('testdata', image_name)
+    image_path = os.path.join('testData', image_name)
     image = cv2.imread(image_path)
+    image = cv2.resize(image, (32, 32)).astype(np.float)
     images.append(image)
   images = np.array(images)
 
@@ -119,12 +121,13 @@ with tf.Session() as sess:
       labels_placeholder: labels_batch})
 
   test_images, test_names = get_test_data()
-  df = pd.DataFrame()
+  df = pd.DataFrame(columns=['image_name', 'label'])
   result_path = 'test_result.csv'
-  for i in range(test_images):
+  for i in range(len(test_images)):
+    print(i)
     test_label = sess.run(predict_label, feed_dict={
-      images_placeholder: test_images[i], labels_placeholder: 0})
-    df.loc[i] = [test_names[i], test_label]
+      images_placeholder: [test_images[i]], labels_placeholder: [0]})
+    df.loc[i] = [test_names[i], test_label[0]]
   df.to_csv(result_path, index=False)
 
 
