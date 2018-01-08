@@ -1,5 +1,7 @@
 from data_utils import load_CIFAR10
 import numpy as np
+import os
+import cv2
 
 cifar10_dir = 'cifar-10-batches-py'
 
@@ -7,6 +9,22 @@ cifar10_dir = 'cifar-10-batches-py'
 class DataProvider(object):
     def __init__(self):
         self._train_data, self._train_label, self._test_data, self._test_label = load_CIFAR10(cifar10_dir)
+
+    def get_test_data(self):
+        images = []
+        names = os.listdir('testData')
+        names.sort()
+        for image_name in names:
+            image_path = os.path.join('testData', image_name)
+            image = cv2.imread(image_path)
+            image = cv2.resize(image, (32, 32)).astype(np.float)
+            images.append(image)
+        images = np.array(images)
+
+        # Normalize Data
+        mean_image = np.mean(images, axis=0)
+        images -= mean_image
+        return images, names
 
     def get_data(self, phase):
         train_size = int(len(self._train_data) * 2 / 3)
